@@ -19,17 +19,17 @@ jobs:
           cd dist
           sha256sum -c SHA256SUMS.txt
 
-      - name: Publish v1.0.0
+      - name: Publish v1.0.1
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view v1.0.0 >/dev/null 2>&1; then
-            echo "Release v1.0.0 already exists; assets left unchanged."
+          if gh release view v1.0.1 >/dev/null 2>&1; then
+            echo "Release v1.0.1 already exists; assets left unchanged."
             exit 0
           fi
-          gh release create v1.0.0 \
-            dist/PotatoRemote-Android-1.0.0.apk \
+          gh release create v1.0.1 \
+            dist/PotatoRemote-Android-1.0.1.apk \
             dist/PotatoRemote-Web-1.0.0-o2switch.zip \
             dist/SHA256SUMS.txt \
-            --title "Potato Remote 1.0.0" \
+            --title "Potato Remote 1.0.1" \
             --notes-file .github/RELEASE_NOTES.md

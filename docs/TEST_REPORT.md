@@ -2,6 +2,8 @@
 
 Date : 2 novembre 2026. Environnement : conteneur Linux Ubuntu 24.04, sans appareil Android physique ni iPad.
 
+> **Correctif 1.0.1** : l'initialisation EGL de la capture a été corrigée (`No EGLSurface - can't make current`). Un pbuffer hors écran 1×1 est désormais créé avant `makeCurrent()`. L'APK 1.0.1 a été reconstruit et vérifié ; la validation sur appareil physique reste à faire.
+
 ## Résumé
 
 | Vérification | Résultat |
@@ -79,7 +81,7 @@ JAVA_HOME=… ANDROID_HOME=… ./gradlew assembleRelease
 ```
 
 - Build release : **SUCCESSFUL**.
-- APK final : `dist/PotatoRemote-Android-1.0.0.apk` (environ 52 Mo, 4 ABI, SHA-256 `f6ba2f9e…e8bc0`).
+- APK final : `dist/PotatoRemote-Android-1.0.1.apk` (environ 52 Mo, 4 ABI, SHA-256 `f2582920686636252445d10f7aaa741874b90173827ebb1972280ad477587b8c`).
 - `apksigner verify` : **v2 = true**, certificat `CN=Potato Remote`.
 - `zipalign -c -v 4` : **OK**.
 - Manifeste : `minSdk 26`, `targetSdk 35`, permissions Internet/réseau/notification/foreground/mediaProjection/wakeLock, service `ShareService` en `mediaProjection`, service d'accessibilité exporté avec permission système.
@@ -156,6 +158,7 @@ POTATO_TEST_URL=http://127.0.0.1:8088 node tests/browser_test.cjs
 - Continuité du geste long : chemin de maintien avec un déplacement infime pour éviter un refus Android.
 - `VirtualDisplay` nul non détecté : exception explicite.
 - Test anti-bruteforce non reproductible : nom de session unique et remise à zéro des compteurs dans le script local.
+- 1.0.1 : `EglBase.makeCurrent()` était appelé sans `EGLSurface` (`No EGLSurface - can't make current`). Le contexte de capture utilise maintenant un pbuffer hors écran 1×1 (`CONFIG_PIXEL_BUFFER`).
 
 ## 7. Limites connues (à ne pas masquer)
 
@@ -179,7 +182,7 @@ POTATO_TEST_URL=http://127.0.0.1:8088 node tests/browser_test.cjs
 
 | Fichier | SHA-256 |
 |---|---|
-| `dist/PotatoRemote-Android-1.0.0.apk` | `f6ba2f9ea5f55a70347a2d690017d74ffbec962c4cf43eed18daa5089f3e8bc0` |
+| `dist/PotatoRemote-Android-1.0.1.apk` | `f2582920686636252445d10f7aaa741874b90173827ebb1972280ad477587b8c` |
 | `dist/PotatoRemote-Web-1.0.0-o2switch.zip` | `b143467c95b6e7348b81a7788d637a6755f1a5b4a269fefb603acd3b4a3436b2` |
 
 Le ZIP a été extrait et testé : `index.html`, `.htaccess`, `api/index.php`, `api/config.php`, `assets/js/viewer.js`, `data/.htaccess` et `INSTALLATION.md` présents ; lint PHP OK ; `health` OK ; création locale OK.

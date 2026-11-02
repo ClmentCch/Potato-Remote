@@ -136,7 +136,11 @@ class ScreenCaptureEngine(
         screenHeight = screen.y
         val density = context.resources.displayMetrics.densityDpi
 
-        eglBase = EglBase.create()
+        // EglBase.makeCurrent() exige une EGLSurface, même lorsque le rendu
+        // se fait uniquement dans des framebuffers hors écran. Un pbuffer 1x1
+        // fournit cette surface sans dépendre d'une fenêtre ou d'un SurfaceTexture.
+        eglBase = EglBase.create(null, EglBase.CONFIG_PIXEL_BUFFER)
+        eglBase.createDummyPbufferSurface()
         eglBase.makeCurrent()
 
         val size = computeCaptureSize(screen)

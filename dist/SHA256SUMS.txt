@@ -1,2 +1,2 @@
-f6ba2f9ea5f55a70347a2d690017d74ffbec962c4cf43eed18daa5089f3e8bc0  PotatoRemote-Android-1.0.0.apk
+f2582920686636252445d10f7aaa741874b90173827ebb1972280ad477587b8c  PotatoRemote-Android-1.0.1.apk
 b143467c95b6e7348b81a7788d637a6755f1a5b4a269fefb603acd3b4a3436b2  PotatoRemote-Web-1.0.0-o2switch.zip

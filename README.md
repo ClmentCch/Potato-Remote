@@ -11,7 +11,7 @@ Potato Remote est composé de deux logiciels complémentaires :
 
 | Livrable | Fichier |
 |---|---|
-| APK Android signé (release) | `dist/PotatoRemote-Android-1.0.0.apk` |
+| APK Android signé (release) | `dist/PotatoRemote-Android-1.0.1.apk` |
 | Site web prêt pour o2switch | `dist/PotatoRemote-Web-1.0.0-o2switch.zip` |
 | Empreintes SHA-256 | `dist/SHA256SUMS.txt` |
 | Sources Android | `android/` |
@@ -42,7 +42,7 @@ Les limites Android et hébergement sont détaillées dans `docs/TEST_REPORT.md`
 
 ### 1. Installer l'application Android
 
-Transférez `dist/PotatoRemote-Android-1.0.0.apk` sur le téléphone, autorisez l'installation depuis cette source, puis ouvrez **Potato Remote**.
+Transférez `dist/PotatoRemote-Android-1.0.1.apk` sur le téléphone, autorisez l'installation depuis cette source, puis ouvrez **Potato Remote**.
 
 1. Ouvrez **Réglages** et saisissez l'adresse de votre site, par exemple `https://potato.mondomaine.fr` (sans `/api`).
 2. Activez le service d'accessibilité **Potato Remote — contrôle distant** si vous voulez le contrôle tactile ou le clavier.
