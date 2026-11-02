@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="cream">#FFF7EA</color>
+    <color name="cream_deep">#F8ECD8</color>
+    <color name="brown_900">#2B1B11</color>
+    <color name="brown_800">#3A2418</color>
+    <color name="brown_500">#7A5A43</color>
+    <color name="accent">#E0763F</color>
+    <color name="accent_dark">#C85F2A</color>
+    <color name="sage">#7E9E6A</color>
+    <color name="danger">#B84A32</color>
+    <color name="ic_launcher_background">#FFF8EC</color>
+</resources>

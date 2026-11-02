@@ -1,0 +1,66 @@
+# =============================================================================
+# Potato Remote — configuration Apache (o2switch / mutualisé cPanel)
+# =============================================================================
+
+Options -Indexes
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # HTTPS obligatoire (le partage d'écran et les jetons ne doivent jamais
+  # circuler en clair). Compatible proxy o2switch via X-Forwarded-Proto.
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  # Dossiers sensibles : jamais accessibles depuis le navigateur.
+  RewriteRule ^data(/|$) - [F,L]
+  RewriteRule ^api/src(/|$) - [F,L]
+</IfModule>
+
+# Certains PHP-FPM suppriment l'en-tête Authorization ; on le restaure pour
+# les clients qui n'enverraient pas aussi X-Potato-Token.
+<IfModule mod_setenvif.c>
+  SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+</IfModule>
+
+# Fichiers techniques : jamais servis.
+<FilesMatch "^(config\.php|.*\.(json|md|lock|log|sql|ini|bak|sh|jks|keystore))$">
+  Require all denied
+</FilesMatch>
+
+# En-têtes de sécurité.
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=()"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+  Header always set X-Robots-Tag "noindex, nofollow" env=HTTPS
+</IfModule>
+
+# Compression.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain application/javascript application/json image/svg+xml application/manifest+json
+</IfModule>
+
+# Cache des ressources statiques (les URL portent ?v=1).
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/css "access plus 7 days"
+  ExpiresByType application/javascript "access plus 7 days"
+  ExpiresByType image/svg+xml "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType font/woff2 "access plus 365 days"
+  ExpiresByType application/manifest+json "access plus 1 day"
+</IfModule>
+
+# Types MIME explicites (certains hébergeurs les omettent).
+<IfModule mod_mime.c>
+  AddType font/woff2 .woff2
+  AddType application/manifest+json .webmanifest
+  AddType image/svg+xml .svg
+</IfModule>

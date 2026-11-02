@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Le build release conserve usesCleartextTraffic=false ; seul le build
+         de développement peut joindre un serveur PHP local en HTTP. -->
+    <application android:usesCleartextTraffic="true" />
+</manifest>

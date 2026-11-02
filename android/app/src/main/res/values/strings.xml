@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Potato Remote</string>
+    <string name="accessibility_label">Potato Remote — contrôle distant</string>
+    <string name="accessibility_description">Permet à Potato Remote d\'exécuter les gestes tactiles et la saisie de texte envoyés par les spectateurs que vous avez autorisés. Vous pouvez désactiver ce service à tout moment.</string>
+    <string name="notification_channel_sharing">Partage d\'écran actif</string>
+    <string name="notification_channel_alerts">Alertes de contrôle</string>
+    <string name="notification_title">Partage en cours</string>
+    <string name="notification_stop">Arrêter</string>
+</resources>

@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>Session — Potato Remote</title>
+  <meta name="theme-color" content="#130C07">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preload" href="assets/fonts/outfit-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/app.css?v=1">
+  <link rel="stylesheet" href="assets/css/viewer.css?v=1">
+</head>
+<body class="viewer-body">
+  <header class="topbar">
+    <div class="topbar-left">
+      <a class="mini-brand" href="index.html" aria-label="Potato Remote — retour à l'accueil">
+        <img src="assets/img/logo-badge.svg" alt="" width="34" height="34">
+        <span>Potato&nbsp;Remote</span>
+      </a>
+      <div class="session-id">
+        <span class="muted">Session</span>
+        <strong id="session-name">…</strong>
+      </div>
+    </div>
+
+    <div class="chips" role="status" aria-live="polite">
+      <span class="chip" id="chip-connection" data-state="connecting">
+        <i class="dot" aria-hidden="true"></i>
+        <span id="connection-text">Connexion…</span>
+      </span>
+      <span class="chip" id="chip-latency" hidden>
+        <span class="chip-label">Latence</span>
+        <strong id="latency-text">—</strong>
+      </span>
+      <span class="chip" id="chip-quality" hidden>
+        <span class="chip-label">Flux</span>
+        <strong id="quality-text">—</strong>
+      </span>
+      <span class="chip" id="chip-viewers" hidden>
+        <span class="chip-label">Spectateurs</span>
+        <strong id="viewers-text">1</strong>
+      </span>
+    </div>
+  </header>
+
+  <main class="stage-wrap" id="stage-wrap">
+    <section class="stage" id="stage" aria-label="Écran du téléphone Android">
+      <video id="video" autoplay playsinline muted></video>
+      <div class="touch-layer" id="touch-layer" data-active="false" aria-hidden="true"></div>
+      <div class="ripples" id="ripples" aria-hidden="true"></div>
+
+      <div class="stage-overlay" id="overlay" data-state="loading">
+        <img class="overlay-mascot" src="assets/img/logo-mark.svg" alt="" width="92" height="92">
+        <h2 id="overlay-title">Connexion au téléphone…</h2>
+        <p id="overlay-text">La session s'ouvre en toute sécurité.</p>
+        <div class="overlay-progress" aria-hidden="true"><span></span></div>
+        <button type="button" class="btn btn-ghost" id="overlay-action" hidden>Réessayer</button>
+      </div>
+
+      <p class="stage-caption" id="stage-caption" hidden></p>
+    </section>
+  </main>
+
+  <footer class="toolbar" id="toolbar">
+    <div class="toolbar-group">
+      <button type="button" class="tool" id="btn-control" aria-pressed="false" title="Activer le contrôle tactile distant">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V6.5a1.5 1.5 0 0 1 3 0V11m0-1.5a1.5 1.5 0 0 1 3 0V12m0-1a1.5 1.5 0 0 1 3 0v4.5A6.5 6.5 0 0 1 11.5 22h-.9a6 6 0 0 1-4.3-1.8L3 16.7a1.6 1.6 0 0 1 2.3-2.2L7 16"/></svg>
+        <span>Contrôle</span>
+      </button>
+      <button type="button" class="tool" id="btn-keyboard" aria-pressed="false" aria-controls="keyboard-panel" title="Ouvrir le clavier distant">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M7 10h.01M11 10h.01M15 10h.01M8 14h8"/></svg>
+        <span>Clavier</span>
+      </button>
+    </div>
+
+    <div class="toolbar-group toolbar-center">
+      <button type="button" class="tool" id="btn-fit" aria-pressed="false" title="Ajuster le cadrage : ajuster ou remplir l'écran">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9M20 15v3.5a1.5 1.5 0 0 1-1.5 1.5H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15"/></svg>
+        <span id="fit-label">Ajuster</span>
+      </button>
+    </div>
+
+    <div class="toolbar-group">
+      <button type="button" class="tool" id="btn-fullscreen" title="Plein écran">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M3 16v5h5"/></svg>
+        <span>Plein écran</span>
+      </button>
+      <button type="button" class="tool tool-quit" id="btn-leave" title="Quitter la session">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H15M10 17l-5-5 5-5M5 12h10"/></svg>
+        <span>Quitter</span>
+      </button>
+    </div>
+  </footer>
+
+  <section class="keyboard-sheet" id="keyboard-panel" hidden aria-label="Clavier distant">
+    <header class="sheet-head">
+      <div class="sheet-title">
+        <strong>Clavier distant</strong>
+        <p id="kb-hint">Le texte est envoyé au champ actif du téléphone.</p>
+      </div>
+      <div class="sheet-head-actions">
+        <label class="switch" title="Envoyer chaque caractère en direct">
+          <input type="checkbox" id="kb-live" checked>
+          <span class="switch-track" aria-hidden="true"></span>
+          <span class="switch-label">Live</span>
+        </label>
+        <button type="button" class="icon-btn" id="kb-close" aria-label="Fermer le clavier">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="kb-quickkeys" role="group" aria-label="Touches spéciales">
+      <button type="button" class="kbd-key" data-key="escape">Échap</button>
+      <button type="button" class="kbd-key" data-key="back">Retour</button>
+      <button type="button" class="kbd-key" data-key="home">Accueil</button>
+      <button type="button" class="kbd-key" data-key="enter">Entrée ↵</button>
+      <button type="button" class="kbd-key" data-key="backspace">⌫</button>
+    </div>
+
+    <textarea id="keyboard-textarea" rows="3" placeholder="Tapez ici : le texte part sur le téléphone…"
+              autocomplete="off" autocapitalize="sentences" spellcheck="false" aria-label="Texte à envoyer au téléphone"></textarea>
+
+    <div class="kb-accents" role="group" aria-label="Caractères accentués">
+      <button type="button" class="kbd-char" data-char="é">é</button>
+      <button type="button" class="kbd-char" data-char="è">è</button>
+      <button type="button" class="kbd-char" data-char="ê">ê</button>
+      <button type="button" class="kbd-char" data-char="à">à</button>
+      <button type="button" class="kbd-char" data-char="ç">ç</button>
+      <button type="button" class="kbd-char" data-char="ù">ù</button>
+      <button type="button" class="kbd-char" data-char="ô">ô</button>
+      <button type="button" class="kbd-char" data-char="î">î</button>
+      <button type="button" class="kbd-char" data-char="œ">œ</button>
+      <button type="button" class="kbd-char" data-char="’">’</button>
+    </div>
+
+    <div class="kb-actions">
+      <button type="button" class="btn btn-ghost" id="kb-paste">Coller</button>
+      <button type="button" class="btn btn-ghost" id="kb-clear">Effacer le champ</button>
+      <button type="button" class="btn btn-primary" id="kb-send">Envoyer le texte</button>
+    </div>
+
+    <p class="kb-note" id="kb-status" aria-live="polite">
+      Certaines applications protègent leurs champs de saisie : la frappe distante peut y être refusée.
+    </p>
+  </section>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <div class="dialog" id="leave-dialog" hidden>
+    <div class="dialog-card" role="dialog" aria-modal="true" aria-labelledby="leave-title">
+      <h2 id="leave-title">Quitter la session ?</h2>
+      <p>Le partage d'écran continue sur le téléphone. Vous pourrez rejoindre la session à nouveau avec le mot de passe.</p>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-soft" id="leave-cancel">Annuler</button>
+        <button type="button" class="btn btn-primary" id="leave-confirm">Quitter</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="assets/js/viewer.js?v=1"></script>
+</body>
+</html>

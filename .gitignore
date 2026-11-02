@@ -1,0 +1,26 @@
+# Outils
+.DS_Store
+Thumbs.db
+*.log
+
+# Android
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+*.iml
+.gradle/
+
+# Web (runtime data, never commit sessions)
+web/data/sessions/
+web/data/*.json
+web/data/*.lock
+!web/data/.gitignore
+
+# Divers
+node_modules/
+*.zip
+*.apk
+*.aab
+.env
